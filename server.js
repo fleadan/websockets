@@ -54,7 +54,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/', express.static(__dirname + '/public'))
 app.use('/', webRoutes);
 
-let player_names = []
+let names = []
 let letras = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 
@@ -63,15 +63,15 @@ io.on('connection', (socket) => {
   .then((response) => {
     //console.log("axios response: ", response.data);
     var player = response.data[0];
-      player_names.push(player);
-      socket.emit('init', {player : player, player_names : player_names});
-      socket.broadcast.emit('player added', {player_names : player_names});
+      names.push(player);
+      socket.emit('init', {player : player, names : names});
+      socket.broadcast.emit('player added', {names : names});
     });
 
-    socket.on('play', () => {
+    socket.on('start', () => {
       letra = letras[Math.floor((Math.random() * 26))];
-      socket.emit('play', {letra : letra});
-      socket.broadcast.emit('play', {letra : letra});
+      socket.emit('start', {letra : letra});
+      socket.broadcast.emit('start', {letra : letra});
       console.log(letra);
     });
 

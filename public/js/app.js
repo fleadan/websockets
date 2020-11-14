@@ -32,7 +32,7 @@ function playGame(){
   $("input[type='text']").val('')
   $("#stop").show();
   $("#revenge").hide();
-  window.socket.emit("play");
+  window.socket.emit("start");
 }
 
 function bastaGame(){
@@ -89,12 +89,12 @@ function connectToSocketIo(){
   });
 
   window.socket.on('New player', function(data) {
-    var players = data.player_names;
+    var players = data.names;
     var last_player = players[players.length - 1];
     playerAddedToast(last_player);
   });
 
-  window.socket.on('play', function (data) {
+  window.socket.on('start', function (data) {
     sendLetra(data.letra);
   })
 
