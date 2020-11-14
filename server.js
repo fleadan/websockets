@@ -55,7 +55,7 @@ app.use('/', express.static(__dirname + '/public'))
 app.use('/', webRoutes);
 
 let player_names = []
-let letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+let letras = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 
 
 io.on('connection', (socket) => {
@@ -69,20 +69,15 @@ io.on('connection', (socket) => {
     });
 
     socket.on('play', () => {
-      letter = letters[Math.floor((Math.random() * 26))];
-      socket.emit('play', {letter : letter});
-      socket.broadcast.emit('play', {letter : letter});
-      console.log(letter);
+      letra = letras[Math.floor((Math.random() * 26))];
+      socket.emit('play', {letra : letra});
+      socket.broadcast.emit('play', {letra : letra});
+      console.log(letra);
     });
 
     socket.on('end', () => {
-      socket.emit('gradeAnswers', {letter : letter});
-      socket.broadcast.emit('gradeAnswers', {letter : letter});
-    })
-
-    socket.on('res', () => {
-      socket.emit('getres', {letter : letter});
-      socket.broadcast.emit('getres', {letter : letter});
+      socket.emit('score', {letra : letra});
+      socket.broadcast.emit('score', {letra : letra});
     })
 
 })

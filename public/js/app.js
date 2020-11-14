@@ -3,13 +3,13 @@ function initToast(player) {
   $.toast({
     text : msg,
     position : "top-right",
-    icon: 'success',
+    icon: 'connection established',
     hideAfter: false
   })
 }
 
 function playerAddedToast(player) {
-  var msg = player + " now playing";
+  var msg = player + " Game on";
   $.toast({
     text : msg,
     position : "top-right",
@@ -17,12 +17,12 @@ function playerAddedToast(player) {
   })
 }
 
-function sendLetter(letter){
-  var letter = letter;
-  $("#letter").text(letter);
+function sendLetra(letra){
+  var letra = letra;
+  $("#letra").text(letra);
   $("#startButton").hide();
   $("#gameForm").show();
-  $("#bastaButton").show();
+  $("#stop").show();
   
 }
 
@@ -30,8 +30,8 @@ function playGame(){
   $("input[type='text']").prop("disabled", false);
   $("input[type='text']").removeClass('is-valid is-invalid')
   $("input[type='text']").val('')
-  $("#bastaButton").show();
-  $("#playAgainButton").hide();
+  $("#stop").show();
+  $("#revenge").hide();
   window.socket.emit("play");
 }
 
@@ -39,39 +39,39 @@ function bastaGame(){
   window.socket.emit("end")
 }
 
-function gradingAnswers(letter){
+function grade(letra){
   var cont = 0;
   $("input[type='text']").prop("disabled", true);
 
-  if($("#name").val().charAt(0) == letter ){
+  if($("#name").val().charAt(0) == letra ){
     $("#name").addClass("is-valid");
     cont+=12.5;
   } else { $("#name").addClass("is-invalid"); }
-  if($("#color").val().charAt(0) == letter){
+  if($("#color").val().charAt(0) == letra){
     $("#color").addClass("is-valid");
     cont+=12.5;
   } else { $("#color").addClass("is-invalid"); }
-  if($("#pais").val().charAt(0) == letter ){
+  if($("#pais").val().charAt(0) == letra ){
     $("#pais").addClass("is-valid");
     cont+=12.5;
   } else { $("#pais").addClass("is-invalid"); }
-  if($("#animal").val().charAt(0) == letter){
+  if($("#animal").val().charAt(0) == letra){
     $("#animal").addClass("is-valid");
     cont+=12.5;
   } else { $("#animal").addClass("is-invalid"); }
-  if($("#flowerFruit").val().charAt(0) == letter){
+  if($("#flowerFruit").val().charAt(0) == letra){
     $("#flowerFruit").addClass("is-valid");
     cont+=12.5;
   } else { $("#flowerFruit").addClass("is-invalid"); }
-  if($("#videoJuego").val().charAt(0) == letter ){
+  if($("#videoJuego").val().charAt(0) == letra ){
     $("#videoJuego").addClass("is-valid");
     cont+=12.5;
   } else { $("#videoJuego").addClass("is-invalid"); }
-  if($("#marca").val().charAt(0) == letter ){
+  if($("#marca").val().charAt(0) == letra ){
     $("#marca").addClass("is-valid");
     cont+=12.5;
   } else { $("#marca").addClass("is-invalid"); }
-  if($("#cancion").val().charAt(0) == letter ){
+  if($("#cancion").val().charAt(0) == letra){
     $("#cancion").addClass("is-valid");
     cont+=12.5;
   } else { $("#cancion").addClass("is-invalid"); }
@@ -88,28 +88,23 @@ function connectToSocketIo(){
     initToast(player);
   });
 
-  window.socket.on('player added', function(data) {
+  window.socket.on('New player', function(data) {
     var players = data.player_names;
     var last_player = players[players.length - 1];
     playerAddedToast(last_player);
   });
 
   window.socket.on('play', function (data) {
-    sendLetter(data.letter);
+    sendLetra(data.letra);
   })
 
-  window.socket.on('gradeAnswers', function (data) {
-    gradingAnswers(data.letter);
-    $("#bastaButton").hide();
-    $("#playAgainButton").show();
+  window.socket.on('score', function (data) {
+    grade(data.letra);
+    $("#stop").hide();
+    $("#revenge").show();
     
   })
-  window.socket.on('getres', function (data) {
-    gradingAnswers(data.letter);
-    $("#bastaButton").hide();
-    $("#playAgainButton").show();
-    
-  })
+  
 }
 
 
